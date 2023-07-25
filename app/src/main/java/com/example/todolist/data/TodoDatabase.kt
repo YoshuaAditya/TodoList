@@ -11,7 +11,7 @@ import com.example.todolist.data.TodoDatabaseWorker.Companion.KEY_FILENAME
 import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "todos")
-data class Todo constructor(val title: String, val description: String, val time: Long = System.currentTimeMillis(),
+data class Todo constructor(val title: String, val description: String, val date: Long,
                             @PrimaryKey(autoGenerate = true) val id: Int = 0)
 
 @Dao

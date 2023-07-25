@@ -17,7 +17,6 @@ class TodoDatabaseWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val filename = inputData.getString(KEY_FILENAME)
-            println(filename)
             if (filename != null) {
                 applicationContext.assets.open(filename).use { inputStream ->
                     JsonReader(inputStream.reader()).use { jsonReader ->
