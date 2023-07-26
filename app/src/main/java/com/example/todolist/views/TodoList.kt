@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.todolist.MainViewModel
+import com.example.todolist.Routes
 import com.example.todolist.data.Todo
 import com.example.todolist.ui.theme.Green
 import com.example.todolist.ui.theme.Red
@@ -71,8 +72,8 @@ fun TodoDetails(todo: Todo,mainViewModel: MainViewModel, navigate: (route:String
                         )
                     }
                     Row(){
-                        IconButton(onClick = { navigate("create/${todo.id}") }){ Icon(Icons.Filled.Edit,"") }
-                        IconButton(onClick = { navigate("delete/${todo.id}") }){ Icon(Icons.Filled.Delete,"",tint = Red) }
+                        IconButton(onClick = { navigate("${Routes.Create.route}/${todo.id}") }){ Icon(Icons.Filled.Edit,"") }
+                        IconButton(onClick = { navigate("${Routes.Delete.route}/${todo.id}") }){ Icon(Icons.Filled.Delete,"",tint = Red) }
                     }
                 }
             }

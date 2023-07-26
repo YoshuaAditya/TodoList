@@ -65,27 +65,27 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NavigationHost(mainViewModel: MainViewModel, onBackPress: () -> Unit) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "main") {
-        composable("main") {
+    NavHost(navController = navController, startDestination = Routes.Main.route) {
+        composable(Routes.Main.route) {
             MainActivityContent(mainViewModel){navController.navigate(
                 it,
                 NavOptions.Builder().setLaunchSingleTop(true).build())
             }
         }
-        composable("create/{id}",arguments = listOf(navArgument("id") { defaultValue = "0" })
+        composable("${Routes.Create.route}/{id}",arguments = listOf(navArgument("id") { defaultValue = "0" })
         ) {
             it.arguments?.getString("id")?.let { id ->
                 CreateOrEditTodo(Integer.valueOf(id),mainViewModel,onBackPress)
             }
         }
 
-        composable("delete/{id}",arguments = listOf(navArgument("id") { defaultValue = "0" })
+        composable("${Routes.Delete.route}/{id}",arguments = listOf(navArgument("id") { defaultValue = "0" })
         ){
             it.arguments?.getString("id")?.let { id ->
                 mainViewModel.deleteTodo(Integer.valueOf(id))
             }
             LaunchedEffect(Unit){
-                navController.navigate("main"){popUpTo(navController.graph.findStartDestination().id)}
+                navController.navigate(Routes.Main.route){popUpTo(navController.graph.findStartDestination().id)}
                 onBackPress()
             }
         }
