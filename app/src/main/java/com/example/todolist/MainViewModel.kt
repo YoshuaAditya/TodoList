@@ -26,6 +26,9 @@ class MainViewModel  constructor(
     fun insert(todo: Todo) = viewModelScope.launch {
         repository.insert(todo)
     }
+    fun updateTodo(todo:Todo,id: Int) = viewModelScope.launch {
+        repository.update(todo.title,todo.description,todo.date,id)
+    }
 
     fun deleteTodo(id: Int) = viewModelScope.launch {
         repository.delete(id)

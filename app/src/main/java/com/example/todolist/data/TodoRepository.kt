@@ -24,4 +24,8 @@ class TodoRepository constructor(private val todoDao: TodoDao) {
     suspend fun delete(id: Int) {
         todoDao.deleteTodo(id)
     }
+    @WorkerThread
+    suspend fun update(title: String, description: String, date: Long,id: Int) {
+        todoDao.update(title, description,date,id)
+    }
 }

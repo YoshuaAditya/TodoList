@@ -2,33 +2,55 @@ package com.example.todolist.views
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.asLiveData
 import com.example.todolist.MainViewModel
 import com.example.todolist.data.Todo
 import com.example.todolist.ui.theme.Red
 import com.example.todolist.ui.theme.TodoListTheme
+import kotlinx.coroutines.flow.collect
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun CreateOrEditTodo(id: Int?, mainViewModel: MainViewModel, onBackPress: () -> Unit) {
-    val title = remember { mutableStateOf(TextFieldValue()) }
-    val description = remember { mutableStateOf(TextFieldValue()) }
-    var error = remember { mutableStateOf(false) }
+    var titleValue=""
+    var descriptionValue=""
+    var dateValue="Date"
+    var scaffoldTitle="Create"
+
+    println(id)
+    id?.let { todoId ->
+        val todo:Todo?=mainViewModel.todos.value?.find {
+            it.id==todoId
+        }
+        todo?.let {
+            titleValue=it.title
+            descriptionValue=it.description
+            val sdf = SimpleDateFormat("dd/MM/yyyy")
+            dateValue=sdf.format(Date(it.date))
+            scaffoldTitle="Edit"
+        }
+    }
+
+    val title = remember { mutableStateOf(TextFieldValue(titleValue)) }
+    val description = remember { mutableStateOf(TextFieldValue(descriptionValue)) }
+    val error = remember { mutableStateOf(false) }
+    var selectedDateText by remember { mutableStateOf(dateValue) }
 
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
-    var selectedDateText by remember { mutableStateOf("Date") }
     val year = calendar[Calendar.YEAR]
     val month = calendar[Calendar.MONTH]
     val dayOfMonth = calendar[Calendar.DAY_OF_MONTH]
@@ -45,7 +67,7 @@ fun CreateOrEditTodo(id: Int?, mainViewModel: MainViewModel, onBackPress: () -> 
         ) {
             Scaffold(
                 topBar = {
-                    TopAppBar(title = { Text("Create") })
+                    TopAppBar(title = { Text(scaffoldTitle) })
                 },
                 content = {
                     Column(
@@ -74,21 +96,41 @@ fun CreateOrEditTodo(id: Int?, mainViewModel: MainViewModel, onBackPress: () -> 
                                 text = selectedDateText,
                             )
                         }
-                        Button(
-                            modifier = Modifier,
-                            onClick = {
-                                if(title.value.text.isNotBlank()&&description.value.text.isNotBlank()&&!selectedDateText.equals("Date")){
-                                    val sdf = SimpleDateFormat("dd/MM/yyyy")
-                                    val date: Date = sdf.parse(selectedDateText)
-                                    val todo= Todo(title.value.text, description.value.text,date.time)
-                                    mainViewModel.insert(todo)
-                                    onBackPress()
-                                }
-                                else error.value=true
-                            }) {
-                            Text(
-                                text = "Submit",
-                            )
+                        Row(){
+                            Button(
+                                modifier = Modifier.padding(5.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green),
+                                onClick = {
+                                    if(title.value.text.isNotBlank()&&description.value.text.isNotBlank()&& selectedDateText != "Date"){
+                                        val sdf = SimpleDateFormat("dd/MM/yyyy")
+                                        try {
+                                            val date: Date = sdf.parse(selectedDateText)
+                                            val todo= Todo(title.value.text, description.value.text,date.time)
+                                            if (id==0)mainViewModel.insert(todo) else id?.let { mainViewModel.updateTodo(todo,it) }
+                                        }
+                                        catch (e:ParseException){
+                                            println("Wrong date format")
+                                        }
+                                        onBackPress()
+                                    }
+                                    else error.value=true
+                                }) {
+                                Text(
+                                    text = "Submit",
+                                    color = Color.White
+                                )
+                            }
+                            Button(
+                                modifier = Modifier.padding(5.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                                onClick = {
+                                        onBackPress()
+                                }) {
+                                Text(
+                                    text = "Cancel",
+                                    color = Color.White
+                                )
+                            }
                         }
                         if(error.value){
                             Text(

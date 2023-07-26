@@ -25,8 +25,8 @@ interface TodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(todos: List<Todo>)
 
-    @get:Query("select * from todos where id = 0")
-    val todoLiveData: LiveData<Todo?>
+    @Query("UPDATE todos SET title=:title,description=:description,date=:date WHERE id = :id")
+    suspend fun update(title: String, description: String, date: Long,id: Int)
 
     @Query("DELETE FROM todos WHERE id = :id")
     suspend fun deleteTodo(id: Int)
