@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -66,7 +67,10 @@ fun NavigationHost(mainViewModel: MainViewModel, onBackPress: () -> Unit) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            MainActivityContent(mainViewModel){navController.navigate(it){launchSingleTop=true} }
+            MainActivityContent(mainViewModel){navController.navigate(
+                it,
+                NavOptions.Builder().setLaunchSingleTop(true).build())
+            }
         }
         composable("create/{id}",arguments = listOf(navArgument("id") { defaultValue = "0" })
         ) {
@@ -82,6 +86,7 @@ fun NavigationHost(mainViewModel: MainViewModel, onBackPress: () -> Unit) {
             }
             LaunchedEffect(Unit){
                 navController.navigate("main"){popUpTo(navController.graph.findStartDestination().id)}
+                onBackPress()
             }
         }
     }
