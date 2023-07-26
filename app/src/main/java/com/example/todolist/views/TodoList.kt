@@ -25,7 +25,7 @@ import java.util.*
 @Composable
 fun TodoList(todos: List<Todo>, navigate: (route:String) ->Unit) {
     LazyColumn() {
-        items(todos){
+        items(todos, key = { it.id }){
             TodoDetails(it, navigate)
         }
     }
