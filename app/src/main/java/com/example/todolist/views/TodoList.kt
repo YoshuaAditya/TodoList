@@ -17,24 +17,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.todolist.MainViewModel
 import com.example.todolist.data.Todo
 import com.example.todolist.ui.theme.Green
 import com.example.todolist.ui.theme.Red
 import java.util.*
 
 @Composable
-fun TodoList(todos: List<Todo>, navigate: (route:String) ->Unit) {
+fun TodoList(todos: List<Todo>,mainViewModel: MainViewModel, navigate: (route:String) ->Unit) {
     LazyColumn() {
         items(todos, key = { it.id }){
-            TodoDetails(it, navigate)
+            TodoDetails(it,mainViewModel, navigate)
         }
     }
 }
 
 @Composable
-fun TodoDetails(todo: Todo, navigate: (route:String) ->Unit) {
+fun TodoDetails(todo: Todo,mainViewModel: MainViewModel, navigate: (route:String) ->Unit) {
     Column() {
-        var isChecked by remember { mutableStateOf(false) }
+        var isChecked by remember { mutableStateOf(todo.isDone) }
         val surfaceColor by animateColorAsState(
             if (isChecked) Green else MaterialTheme.colors.surface,
         )
@@ -44,7 +45,10 @@ fun TodoDetails(todo: Todo, navigate: (route:String) ->Unit) {
             .border(width = 1.dp, color = Color.Gray), color = surfaceColor) {
             Row(horizontalArrangement = Arrangement.SpaceBetween) {
                 Row(){
-                    Checkbox(checked = isChecked,onCheckedChange = { isChecked= !isChecked} )
+                    Checkbox(checked = isChecked,onCheckedChange = {
+                        isChecked= !isChecked
+                        mainViewModel.updateDoneTodo(isChecked,todo.id)
+                    } )
                     Column() {
                         Text(
                             text = todo.title,

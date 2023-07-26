@@ -30,7 +30,6 @@ fun CreateOrEditTodo(id: Int?, mainViewModel: MainViewModel, onBackPress: () -> 
     var dateValue="Date"
     var scaffoldTitle="Create"
 
-    println(id)
     id?.let { todoId ->
         val todo:Todo?=mainViewModel.todos.value?.find {
             it.id==todoId
@@ -105,8 +104,14 @@ fun CreateOrEditTodo(id: Int?, mainViewModel: MainViewModel, onBackPress: () -> 
                                         val sdf = SimpleDateFormat("dd/MM/yyyy")
                                         try {
                                             val date: Date = sdf.parse(selectedDateText)
-                                            val todo= Todo(title.value.text, description.value.text,date.time)
-                                            if (id==0)mainViewModel.insert(todo) else id?.let { mainViewModel.updateTodo(todo,it) }
+                                            val todo= Todo(title.value.text, description.value.text,date.time,false)
+                                            if (id==0)mainViewModel.insert(todo) else id?.let {
+                                                val todoTemp:Todo?=mainViewModel.todos.value?.find { todo->
+                                                    todo.id==it
+                                                }
+                                                todoTemp?.isDone=false
+                                                mainViewModel.updateTodo(todo,it)
+                                            }
                                         }
                                         catch (e:ParseException){
                                             println("Wrong date format")

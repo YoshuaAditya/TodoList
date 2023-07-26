@@ -32,7 +32,7 @@ fun MainActivityContent(mainViewModel: MainViewModel, navigate: (route:String) -
                 snackbarHost = {/**/ },
                 content = {
                     mainViewModel.todos.observeAsState().value?.let {
-                        TodoList(it,navigate)
+                        TodoList(it,mainViewModel,navigate)
                     }
                 }
             )

@@ -25,7 +25,11 @@ class TodoRepository constructor(private val todoDao: TodoDao) {
         todoDao.deleteTodo(id)
     }
     @WorkerThread
-    suspend fun update(title: String, description: String, date: Long,id: Int) {
-        todoDao.update(title, description,date,id)
+    suspend fun update(title: String, description: String, date: Long,isDone: Boolean,id: Int) {
+        todoDao.update(title, description,date,isDone,id)
+    }
+    @WorkerThread
+    suspend fun updateDone(isDone:Boolean,id: Int) {
+        todoDao.updateDone(isDone,id)
     }
 }

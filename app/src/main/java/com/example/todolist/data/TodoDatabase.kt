@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "todos")
 data class Todo constructor(val title: String, val description: String, val date: Long,
+                            var isDone: Boolean,
                             @PrimaryKey(autoGenerate = true) val id: Int = 0)
 
 @Dao
@@ -25,8 +26,11 @@ interface TodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(todos: List<Todo>)
 
-    @Query("UPDATE todos SET title=:title,description=:description,date=:date WHERE id = :id")
-    suspend fun update(title: String, description: String, date: Long,id: Int)
+    @Query("UPDATE todos SET title=:title,description=:description,date=:date,isDone=:isDone WHERE id = :id")
+    suspend fun update(title: String, description: String, date: Long,isDone: Boolean,id: Int)
+
+    @Query("UPDATE todos SET isDone=:isDone WHERE id = :id")
+    suspend fun updateDone(isDone: Boolean,id: Int)
 
     @Query("DELETE FROM todos WHERE id = :id")
     suspend fun deleteTodo(id: Int)
