@@ -68,7 +68,7 @@ fun TodoDetails(todo: Todo, navigate: (route:String) ->Unit) {
                     }
                     Row(){
                         IconButton(onClick = { navigate("create/${todo.id}") }){ Icon(Icons.Filled.Edit,"") }
-                        IconButton(onClick = { navigate("create/${todo.id}") }){ Icon(Icons.Filled.Delete,"",tint = Red) }
+                        IconButton(onClick = { navigate("delete/${todo.id}") }){ Icon(Icons.Filled.Delete,"",tint = Red) }
                     }
                 }
             }

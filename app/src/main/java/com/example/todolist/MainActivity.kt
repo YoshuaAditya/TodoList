@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asLiveData
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -65,12 +66,22 @@ fun NavigationHost(mainViewModel: MainViewModel, onBackPress: () -> Unit) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            MainActivityContent(mainViewModel){navController.navigate(it)}
+            MainActivityContent(mainViewModel){navController.navigate(it){launchSingleTop=true} }
         }
         composable("create/{id}",arguments = listOf(navArgument("id") { defaultValue = "0" })
         ) {
             it.arguments?.getString("id")?.let { id ->
                 CreateOrEditTodo(Integer.valueOf(id),mainViewModel,onBackPress)
+            }
+        }
+
+        composable("delete/{id}",arguments = listOf(navArgument("id") { defaultValue = "0" })
+        ){
+            it.arguments?.getString("id")?.let { id ->
+                mainViewModel.deleteTodo(Integer.valueOf(id))
+            }
+            LaunchedEffect(Unit){
+                navController.navigate("main"){popUpTo(navController.graph.findStartDestination().id)}
             }
         }
     }
