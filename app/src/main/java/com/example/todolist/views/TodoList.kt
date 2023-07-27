@@ -72,8 +72,8 @@ fun TodoDetails(todo: Todo,mainViewModel: MainViewModel, navigate: (route:String
                         )
                     }
                     Row(){
-                        IconButton(onClick = { navigate("${Routes.Create.route}/${todo.id}") }){ Icon(Icons.Filled.Edit,"") }
-                        IconButton(onClick = { navigate("${Routes.Delete.route}/${todo.id}") }){ Icon(Icons.Filled.Delete,"",tint = Red) }
+                        IconButton(onClick = { navigate("${Routes.Create.route}/${todo.id}") }){ Icon(Icons.Filled.Edit,"update") }
+                        IconButton(onClick = { navigate("${Routes.Delete.route}/${todo.id}") }){ Icon(Icons.Filled.Delete,"delete",tint = Red) }
                     }
                 }
             }

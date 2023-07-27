@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.example.todolist.MainViewModel
 import com.example.todolist.Routes
 import com.example.todolist.ui.theme.TodoListTheme
@@ -26,7 +27,7 @@ fun MainActivityContent(mainViewModel: MainViewModel, navigate: (route:String) -
                 drawerContent = {/**/ },
                 bottomBar = {/**/ },
                 floatingActionButton = {
-                    FloatingActionButton(onClick = { navigate("${Routes.Create.route}/0") }) {
+                    FloatingActionButton(modifier = Modifier.testTag("fab"), onClick = { navigate("${Routes.Create.route}/0") }) {
                         Icon(Icons.Filled.Add,"")
                     }
                 },
