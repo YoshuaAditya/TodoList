@@ -78,15 +78,27 @@ fun NavigationHost(mainViewModel: MainViewModel, onBackPress: () -> Unit) {
                 CreateOrEditTodo(Integer.valueOf(id),mainViewModel,onBackPress)
             }
         }
+        composable("${Routes.Update.route}/{id}/{isChecked}",arguments = listOf(
+            navArgument("id") { defaultValue = "0" },
+            navArgument("isChecked") { defaultValue = false })
+        ) {
+            it.arguments?.getString("id")?.let { id ->
+                it.arguments?.getBoolean("isChecked")?.let { isChecked ->
+                    mainViewModel.updateDoneTodo(isChecked,Integer.valueOf(id))
+                    LaunchedEffect(Unit){
+                        onBackPress()
+                    }
+                }
+            }
+        }
 
         composable("${Routes.Delete.route}/{id}",arguments = listOf(navArgument("id") { defaultValue = "0" })
         ){
             it.arguments?.getString("id")?.let { id ->
                 mainViewModel.deleteTodo(Integer.valueOf(id))
-            }
-            LaunchedEffect(Unit){
-                navController.navigate(Routes.Main.route){popUpTo(navController.graph.findStartDestination().id)}
-                onBackPress()
+                LaunchedEffect(Unit){
+                    onBackPress()
+                }
             }
         }
     }

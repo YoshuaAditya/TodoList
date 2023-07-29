@@ -25,16 +25,16 @@ import com.example.todolist.ui.theme.Red
 import java.util.*
 
 @Composable
-fun TodoList(todos: List<Todo>,mainViewModel: MainViewModel, navigate: (route:String) ->Unit) {
+fun TodoList(todos: List<Todo>, navigate: (route:String) ->Unit) {
     LazyColumn() {
         items(todos, key = { it.id }){
-            TodoDetails(it,mainViewModel, navigate)
+            TodoDetails(it, navigate)
         }
     }
 }
 
 @Composable
-fun TodoDetails(todo: Todo,mainViewModel: MainViewModel, navigate: (route:String) ->Unit) {
+fun TodoDetails(todo: Todo, navigate: (route:String) ->Unit) {
     Column() {
         var isChecked by remember { mutableStateOf(todo.isDone) }
         val surfaceColor by animateColorAsState(
@@ -48,7 +48,7 @@ fun TodoDetails(todo: Todo,mainViewModel: MainViewModel, navigate: (route:String
                 Row(){
                     Checkbox(checked = isChecked,onCheckedChange = {
                         isChecked= !isChecked
-                        mainViewModel.updateDoneTodo(isChecked,todo.id)
+                        navigate("${Routes.Update.route}/${todo.id}/$isChecked")
                     } )
                     Column() {
                         Text(
